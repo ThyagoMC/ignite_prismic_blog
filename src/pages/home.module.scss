@@ -1,1 +1,50 @@
-// TODO
+.blockContent {
+  :global {
+    a {
+      margin-bottom: 2rem;
+      cursor: pointer;
+      height: 6rem;
+      display: flex;
+      flex-direction: column;
+      strong {
+        font-size: 175%;
+        margin-bottom: 0.25rem;
+      }
+      p {
+        font-size: 112.5%;
+      }
+      > div {
+        margin: 1.2rem 0;
+        display: flex;
+        align-items: center;
+        max-width: 420px;
+        width: 100%;
+        font-size: 87.5%;
+
+        time,
+        span {
+          margin-right: 2rem;
+        }
+      }
+    }
+  }
+}
+
+.blockLoad {
+  max-width: 1120px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 1rem 0 2rem 0;
+}
+
+.loadMore {
+  cursor: pointer;
+  color: var(--pink-500);
+  background: none !important;
+  border: none;
+  padding: 0 !important;
+
+  &:active {
+    filter: brightness(80%);
+  }
+}
