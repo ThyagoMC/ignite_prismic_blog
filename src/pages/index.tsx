@@ -73,8 +73,8 @@ export default function Home({
       <main className={commonStyles.container}>
         <div className={`${commonStyles.content} ${styles.blockContent}`}>
           {posts.map(post => (
-            <Link href={`/post/${post.uid}`}>
-              <a key={post.uid}>
+            <Link key={post.uid} href={`/post/${post.uid}`}>
+              <a>
                 <strong>{post.data.title}</strong>
                 <p>{post.data.subtitle}</p>
                 <div>
