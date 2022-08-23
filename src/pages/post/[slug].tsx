@@ -4,6 +4,7 @@ import { FiCalendar, FiClock, FiUser } from 'react-icons/fi';
 import { RichText } from 'prismic-dom';
 import { format } from 'date-fns';
 import ptBR from 'date-fns/locale/pt-BR';
+import { useEffect, useState } from 'react';
 import commonStyles from '../../styles/common.module.scss';
 
 import { getPrismicClient } from '../../services/prismic';
@@ -32,16 +33,20 @@ interface PostProps {
 }
 
 export default function Post({ post }: PostProps) {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => setIsLoading(false), 500);
+  }, []);
+
   function formatDate(date: string): string {
     return format(new Date(date), 'dd MMM yyyy', {
       locale: ptBR,
     });
   }
-  return !post ? (
-    <span>Carregando...</span>
-  ) : (
+  return (
     <div>
-      {post?.data.banner.url && (
+      {post?.data.banner?.url && (
         <img
           style={{ width: '100%', height: '400px' }}
           src={post.data.banner.url}
@@ -50,36 +55,41 @@ export default function Post({ post }: PostProps) {
       )}
 
       <main className={commonStyles.container}>
-        <article className={commonStyles.content}>
-          <header className={styles.headerContainer}>
-            <h1>{post.data.title}</h1>
-            <div>
+        {(isLoading || !post) && (
+          <div style={{ margin: '0 auto' }}>Carregando...</div>
+        )}
+        {post && (
+          <article className={commonStyles.content}>
+            <header className={styles.headerContainer}>
+              <h1>{post.data.title}</h1>
               <div>
-                <FiCalendar />
-                <time>{formatDate(post.first_publication_date)}</time>
+                <div>
+                  <FiCalendar />
+                  <time>{formatDate(post.first_publication_date)}</time>
+                </div>
+                <div>
+                  <FiUser /> <span>{post.data.author}</span>
+                </div>
+                <div>
+                  <FiClock />
+                  <span>4 min</span>
+                </div>
               </div>
-              <div>
-                <FiUser /> <span>{post.data.author}</span>
+            </header>
+            {post.data.content.map(dataContent => (
+              <div key={dataContent.heading}>
+                <h2>{dataContent.heading}</h2>
+                <div
+                  className={styles.articleContent}
+                  // eslint-disable-next-line react/no-danger
+                  dangerouslySetInnerHTML={{
+                    __html: RichText.asHtml(dataContent.body),
+                  }}
+                />
               </div>
-              <div>
-                <FiClock />
-                <span>4 min</span>
-              </div>
-            </div>
-          </header>
-          {post.data.content.map(dataContent => (
-            <div key={dataContent.heading}>
-              <h2>{dataContent.heading}</h2>
-              <div
-                className={styles.articleContent}
-                // eslint-disable-next-line react/no-danger
-                dangerouslySetInnerHTML={{
-                  __html: RichText.asHtml(dataContent.body),
-                }}
-              />
-            </div>
-          ))}
-        </article>
+            ))}
+          </article>
+        )}
       </main>
     </div>
   );

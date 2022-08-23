@@ -264,7 +264,7 @@ describe('Post', () => {
       isFallback: true,
     });
 
-    const postProps = null as any;
+    const postProps = mockedGetByUIDReturn;
 
     render(<Post post={postProps} />);
 
